@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
 
@@ -106,49 +107,50 @@ String randomPhrase(int digits) {
   if (nativeSubstrateSignLib == null)
     return "ERROR: The library is not initialized 🙁";
 
-  print("  ${nativeSubstrateSignLib.toString()}"); // Instance info
+  print(
+      "nativeSubstrateSignLib:  ${nativeSubstrateSignLib.toString()}"); // Instance info
   final phrasePointer = rustRandomPhrase(digits);
-  return Utf8.fromUtf8(phrasePointer);
+  return phrasePointer.toDartString();
 }
 
 String substrateSign(String suri, String message) {
-  final utf8Suri = Utf8.toUtf8(suri);
-  final utf8Message = Utf8.toUtf8(message);
+  final utf8Suri = suri.toNativeUtf8();
+  final utf8Message = message.toNativeUtf8();
   final utf8SignedMessage = rustSign(utf8Suri, utf8Message);
-  final signedMessage = Utf8.fromUtf8(utf8SignedMessage);
+  final signedMessage = utf8SignedMessage.toDartString();
   freeCString(utf8SignedMessage);
   return signedMessage;
 }
 
 String substrateAddress(String seed, int prefix) {
-  final utf8Seed = Utf8.toUtf8(seed);
+  final utf8Seed = seed.toNativeUtf8();
   final utf8Address = rustSubstrateAddress(utf8Seed, prefix);
-  final address = Utf8.fromUtf8(utf8Address);
+  final address = utf8Address.toDartString();
   freeCString(utf8Address);
   return address;
 }
 
 String encryptData(String data, String password) {
-  final utf8Data = Utf8.toUtf8(data);
-  final utf8Password = Utf8.toUtf8(password);
+  final utf8Data = data.toNativeUtf8();
+  final utf8Password = password.toNativeUtf8();
   final utf8Encrypted = rustEncrypt(utf8Data, utf8Password);
-  final encrypted = Utf8.fromUtf8(utf8Encrypted);
+  final encrypted = utf8Encrypted.toDartString();
   freeCString(utf8Encrypted);
   return encrypted;
 }
 
 String decryptData(String data, String password) {
-  final utf8Data = Utf8.toUtf8(data);
-  final utf8Password = Utf8.toUtf8(password);
+  final utf8Data = data.toNativeUtf8();
+  final utf8Password = password.toNativeUtf8();
   final utf8Decrypted = rustDecrypt(utf8Data, utf8Password);
-  final decrypted = Utf8.fromUtf8(utf8Decrypted);
+  final decrypted = utf8Decrypted.toDartString();
   freeCString(utf8Decrypted);
   return decrypted;
 }
 
 int decryptDataWithRef(String data, String password) {
-  final utf8Data = Utf8.toUtf8(data);
-  final utf8Password = Utf8.toUtf8(password);
+  final utf8Data = data.toNativeUtf8();
+  final utf8Password = password.toNativeUtf8();
   final ref = rustDecryptWithRef(utf8Data, utf8Password);
   return ref;
 }
@@ -159,21 +161,21 @@ void destroyDataRef(int ref) {
 
 String substrateSignWithRef(int seedRef, String suriSuffix, String message) {
   if (seedRef == 0) return "seed ref not valid";
-  final utf8SuriSuffix = Utf8.toUtf8(suriSuffix);
-  final utf8Message = Utf8.toUtf8(message);
+  final utf8SuriSuffix = suriSuffix.toNativeUtf8();
+  final utf8Message = message.toNativeUtf8();
   final utf8SignedMessage =
       rustSignWithRef(seedRef, utf8SuriSuffix, utf8Message);
-  final signedMessage = Utf8.fromUtf8(utf8SignedMessage);
+  final signedMessage = utf8SignedMessage.toDartString();
   freeCString(utf8SignedMessage);
   return signedMessage;
 }
 
 String substrateAddressWithRef(int seedRef, String suriSuffix, int prefix) {
   if (seedRef == 0) return "seed ref not valid";
-  final utf8SuriSuffix = Utf8.toUtf8(suriSuffix);
+  final utf8SuriSuffix = suriSuffix.toNativeUtf8();
   final utf8Address =
       rustSubstrateAddressWithRef(seedRef, utf8SuriSuffix, prefix);
-  final address = Utf8.fromUtf8(utf8Address);
+  final address = utf8Address.toDartString();
   freeCString(utf8Address);
   return address;
 }

@@ -6,6 +6,8 @@ void main() {
   test('get random phrase', () {
     String response = randomPhrase(12);
 
+    print("response: $response");
+
     expect(response.split("").length, 12);
   });
 }

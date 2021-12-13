@@ -11,7 +11,7 @@ void main() {
     final finishedTextFinder = find.byValueKey('testFinished');
     final buttonFinder = find.byValueKey('startTest');
 
-    FlutterDriver driver;
+    FlutterDriver? driver;
 
     // Connect to the Flutter driver before running any tests.
     setUpAll(() async {
@@ -21,23 +21,23 @@ void main() {
     // Close the connection to the driver after the tests have completed.
     tearDownAll(() async {
       if (driver != null) {
-        driver.close();
+        driver!.close();
       }
     });
 
     test('starts', () async {
       // Use the `driver.getText` method to verify the counter starts at 0.
-      expect(await driver.getText(finishedTextFinder), "Ready");
-      expect(await driver.getText(resultTextFinder), "Failed");
+      expect(await driver!.getText(finishedTextFinder), "Ready");
+      expect(await driver!.getText(resultTextFinder), "Failed");
     });
 
     test('increments the counter', () async {
       // First, tap the button.
-      await driver.tap(buttonFinder);
+      await driver!.tap(buttonFinder);
 
       // Then, verify the counter text is incremented by 1.
-      expect(await driver.getText(finishedTextFinder), "Finished");
-      expect(await driver.getText(resultTextFinder), "Success");
+      expect(await driver!.getText(finishedTextFinder), "Finished");
+      expect(await driver!.getText(resultTextFinder), "Success");
     });
   });
 }
